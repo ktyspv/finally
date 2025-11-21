@@ -86,4 +86,15 @@ public function showCart()
     }
     return view('cart', compact('cart', 'total'));
 }
+public function removeFromCart(Request $request, $productId)
+{
+    $cart = session()->get('cart', []);
+
+    if (isset($cart[$productId])) {
+        unset($cart[$productId]);
+        session()->put('cart', $cart);
+    }
+
+    return back()->with('success', 'Товар удалён из корзины.');
+}
 }

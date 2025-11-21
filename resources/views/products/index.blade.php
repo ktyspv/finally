@@ -5,47 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Магазин для животных</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-image: url('/images/background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+    </style>
 </head>
-<body class="bg-gray-50">
-    <nav class="bg-blue-600 text-white p-4">
-    <div class="container mx-auto flex justify-between items-center">
-        <a href="/" class="text-xl font-bold">🐾 Магазин для животных</a>
-        <a href="{{ route('cart.show') }}" class="hover:underline">
-            🛒 Корзина
-            @if(session()->has('cart'))
-                ({{ collect(session()->get('cart'))->sum('quantity') }})
-            @endif
-        </a>
-    </div>
-</nav>
-    <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-center mb-8">🐾 Товары для ваших питомцев</h1>
+<body class="relative">
+    <!-- Полупрозрачная подложка для лучшей читаемости (опционально) -->
+    <div class="absolute inset-0 bg-black bg-opacity-20 z-0"></div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @forelse($products as $product)
-                <div class="bg-white rounded-lg shadow-md p-4">
-                    @if($product->image_path)
-                        <img src="{{ asset('storage/images/' . $product->image_path) }}"
-                             alt="{{ $product->name }}"
-                             class="w-full h-48 object-cover rounded mb-4">
-                    @else
-                        <div class="w-full h-48 bg-gray-200 rounded mb-4 flex items-center justify-center">
-                            <span class="text-gray-500">Нет фото</span>
-                        </div>
+    <div class="relative z-10">
+        <!-- Шапка -->
+        <nav class="bg-amber-900 text-white p-4">
+            <div class="container mx-auto flex justify-between items-center">
+                <a href="/" class="text-xl font-bold">🐾 Магазин для животных</a>
+                <a href="{{ route('cart.show') }}" class="hover:underline flex items-center">
+                    🛒 Корзина
+                    @if(session()->has('cart'))
+                        <span class="ml-1 bg-white text-blue-600 rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                            {{ collect(session()->get('cart'))->sum('quantity') }}
+                        </span>
                     @endif
-                    <h2 class="text-xl font-semibold">{{ $product->name }}</h2>
-                    <p class="text-gray-600 mt-2">{{ Str::limit($product->description, 100) }}</p>
-                    <p class="text-lg font-bold text-green-600 mt-2">{{ number_format($product->price, 2, ',', ' ') }} ₽</p>
-                    <form action="{{ route('cart.add', $product) }}" method="POST" class="mt-4">
-    @csrf
-    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full">
-        В корзину
-    </button>
-</form>
-                </div>
-            @empty
-                <p class="text-center col-span-full">Нет товаров.</p>
-            @endforelse
+                </a>
+            </div>
+        </nav>
+
+        <!-- Основной контент -->
+        <div class="container mx-auto px-4 py-8">
+            <h1 class="text-3xl font-bold text-center mb-8 text-white drop-shadow">🐾 Товары для ваших питомцев</h1>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @forelse($products as $product)
+                    <div class="bg-white bg-opacity-90 backdrop-blur-sm rounded-lg shadow-md p-4">
+                        @if($product->image_path)
+                            <img src="{{ asset('storage/images/' . $product->image_path) }}"
+                                 alt="{{ $product->name }}"
+                                 class="w-full h-48 object-cover rounded mb-4">
+                        @else
+                            <div class="w-full h-48 bg-gray-200 rounded mb-4 flex items-center justify-center">
+                                <span class="text-gray-500">Нет фото</span>
+                            </div>
+                        @endif
+                        <h2 class="text-xl font-semibold">{{ $product->name }}</h2>
+                        <p class="text-gray-600 mt-2">{{ Str::limit($product->description, 100) }}</p>
+                        <p class="text-lg font-bold text-green-600 mt-2">{{ number_format($product->price, 2, ',', ' ') }} ₽</p>
+                        <form action="{{ route('cart.add', $product) }}" method="POST" class="mt-4">
+                            @csrf
+                            <button type="submit" class="w-full bg-amber-900 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+                                В корзину
+                            </button>
+                        </form>
+                    </div>
+                @empty
+                    <p class="text-center col-span-full text-white drop-shadow">Нет товаров.</p>
+                @endforelse
+            </div>
         </div>
     </div>
 </body>

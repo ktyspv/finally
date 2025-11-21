@@ -14,3 +14,4 @@ Route::prefix('admin')->group(function () {
 });
 Route::post('/cart/add/{product}', [ProductController::class, 'addToCart'])->name('cart.add');
 Route::get('/cart', [ProductController::class, 'showCart'])->name('cart.show');
+Route::post('/cart/remove/{productId}', [ProductController::class, 'removeFromCart'])->name('cart.remove');
