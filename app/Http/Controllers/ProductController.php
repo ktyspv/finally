@@ -56,4 +56,34 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products.index')->with('success', 'Товар успешно добавлен!');
     }
+    public function addToCart(Request $request, Product $product)
+{
+    $cart = session()->get('cart', []);
+
+    // Если товар уже в корзине — увеличим количество
+    if (isset($cart[$product->id])) {
+        $cart[$product->id]['quantity']++;
+    } else {
+        $cart[$product->id] = [
+            "name" => $product->name,
+            "description" => $product->description,
+            "price" => $product->price,
+            "image_path" => $product->image_path,
+            "quantity" => 1
+        ];
+    }
+
+    session()->put('cart', $cart);
+
+    return back()->with('success', 'Товар добавлен в корзину!');
+}
+public function showCart()
+{
+    $cart = session()->get('cart', []);
+    $total = 0;
+    foreach ($cart as $item) {
+        $total += $item['price'] * $item['quantity'];
+    }
+    return view('cart', compact('cart', 'total'));
+}
 }
