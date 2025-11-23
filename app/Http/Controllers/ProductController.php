@@ -10,10 +10,10 @@ class ProductController extends Controller
 {
     // Главная страница — список товаров
     public function index()
-    {
-        $products = Product::all();
-        return view('products.index', compact('products'));
-    }
+{
+    $categories = \App\Models\Category::with('products')->get();
+    return view('products.index', compact('categories'));
+}
 
     // Админка: список товаров
     public function adminIndex()
@@ -24,9 +24,10 @@ class ProductController extends Controller
 
     // Форма добавления товара
     public function create()
-    {
-        return view('admin.products.create');
-    }
+{
+    $categories = \App\Models\Category::all();
+    return view('admin.products.create', compact('categories'));
+}
 
     // Сохранение товара + загрузка изображения
     public function store(Request $request)
@@ -35,6 +36,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
+            'category_id' => 'nullable|exists:categories,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // до 2 МБ
         ]);
 
@@ -51,6 +53,7 @@ class ProductController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'price' => $request->price,
+            'category_id' => $request->category_id,
             'image_path' => $imagePath,
         ]);
 
