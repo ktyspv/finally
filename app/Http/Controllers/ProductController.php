@@ -17,10 +17,10 @@ class ProductController extends Controller
 
     // Админка: список товаров
     public function adminIndex()
-    {
-        $products = Product::all();
-        return view('admin.products.index', compact('products'));
-    }
+{
+    $products = Product::with('category')->get();
+    return view('admin.products.index', compact('products'));
+}
 
     // Форма добавления товара
     public function create()
@@ -99,5 +99,10 @@ public function removeFromCart(Request $request, $productId)
     }
 
     return back()->with('success', 'Товар удалён из корзины.');
+}
+public function destroy(Product $product)
+{
+    $product->delete();
+    return redirect()->route('admin.products.index')->with('success', 'Товар удалён.');
 }
 }

@@ -10,7 +10,7 @@
     <div class="container mx-auto px-4 py-6">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold">Админка: Товары</h1>
-            <a href="{{ route('admin.products.create') }}" 
+            <a href="{{ route('admin.products.create') }}"
                class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
                 + Новый товар
             </a>
@@ -31,7 +31,9 @@
                         <tr>
                             <th class="px-4 py-2 text-left">Изображение</th>
                             <th class="px-4 py-2 text-left">Название</th>
+                            <th class="px-4 py-2 text-left">Категория</th>
                             <th class="px-4 py-2 text-left">Цена</th>
+                            <th class="px-4 py-2 text-left">Действия</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
@@ -39,14 +41,26 @@
                             <tr>
                                 <td class="px-4 py-2">
                                     @if($product->image_path)
-                                        <img src="{{ asset('storage/images/' . $product->image_path) }}" 
+                                        <img src="{{ asset('storage/images/' . $product->image_path) }}"
                                              alt="Фото" class="w-12 h-12 object-cover rounded">
                                     @else
                                         —
                                     @endif
                                 </td>
                                 <td class="px-4 py-2">{{ $product->name }}</td>
+                                <td class="px-4 py-2">{{ $product->category?->name ?? 'Без категории' }}</td>
                                 <td class="px-4 py-2">{{ number_format($product->price, 2, ',', ' ') }} ₽</td>
+                                <td class="px-4 py-2">
+                                    <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                                class="text-red-600 hover:text-red-800 font-medium"
+                                                onclick="return confirm('Удалить товар?')">
+                                            Удалить
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
