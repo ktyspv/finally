@@ -41,7 +41,7 @@
                             <tr>
                                 <td class="px-4 py-2">
                                     @if($product->image_path)
-                                        <img src="{{ asset('storage/images/' . $product->image_path) }}"
+                                        <img src="{{ asset('images/' . $product->image_path) }}"
                                              alt="Фото" class="w-12 h-12 object-cover rounded">
                                     @else
                                         —

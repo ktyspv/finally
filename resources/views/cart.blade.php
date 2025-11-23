@@ -49,7 +49,7 @@
                     @foreach($cart as $id => $item)
                         <div class="flex items-center border-b p-4">
                             @if($item['image_path'])
-                                <img src="{{ asset('storage/images/' . $item['image_path']) }}"
+                                <img src="{{ asset('images/' . $item['image_path']) }}"
                                      alt="{{ $item['name'] }}"
                                      class="w-16 h-16 object-cover rounded mr-4">
                             @else
