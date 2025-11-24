@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Models\Order;
 
 class ProductController extends Controller
 {
@@ -105,4 +106,45 @@ public function destroy(Product $product)
     $product->delete();
     return redirect()->route('admin.products.index')->with('success', 'Товар удалён.');
 }
+// Показ формы оформления
+public function showCheckout()
+{
+    $cart = session()->get('cart', []);
+    if (empty($cart)) {
+        return redirect()->route('cart.show')->with('error', 'Корзина пуста.');
+    }
+    $total = collect($cart)->sum(fn($item) => $item['price'] * $item['quantity']);
+    return view('checkout', compact('cart', 'total'));
+}
+// Оформление заказа
+public function placeOrder(Request $request)
+{
+    $request->validate([
+        'customer_name' => 'required|string|max:255',
+        'email' => 'required|email',
+        'phone' => 'nullable|string|max:20',
+    ]);
+
+    $cart = session()->get('cart', []);
+    $total = collect($cart)->sum(fn($item) => $item['price'] * $item['quantity']);
+
+    Order::create([
+        'customer_name' => $request->customer_name,
+        'email' => $request->email,
+        'phone' => $request->phone,
+        'items' => $cart, // Laravel сам сохранит как JSON
+        'total' => $total,
+    ]);
+
+    session()->forget('cart'); // Очищаем корзину
+
+    return redirect()->route('cart.show')->with('success', 'Заказ оформлен! Спасибо за покупку 🐾');
+}
+// История заказов (админка)
+public function listOrders()
+{
+    $orders = Order::latest()->get();
+    return view('admin.orders.index', compact('orders'));
+}
+
 }

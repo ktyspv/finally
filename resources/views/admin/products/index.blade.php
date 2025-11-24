@@ -14,6 +14,10 @@
                class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
                 + Новый товар
             </a>
+            <a href="{{ route('admin.orders') }}"
+           class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">
+            Заказы
+        </a>
         </div>
 
         @if(session('success'))

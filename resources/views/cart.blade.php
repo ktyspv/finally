@@ -76,6 +76,9 @@
 
                 <div class="mt-6 text-right">
                     <p class="text-2xl font-bold text-white drop-shadow">Итого: {{ number_format($total, 2, ',', ' ') }} ₽</p>
+                    <a href="{{ route('checkout.show') }}" class="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                        Оформить заказ
+                    </a>
                     <a href="/" class="mt-4 inline-block bg-amber-600 text-white px-4 py-2 rounded hover:bg-amber-700">
                         Продолжить покупки
                     </a>
